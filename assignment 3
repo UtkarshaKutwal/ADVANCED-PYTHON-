@@ -1,0 +1,56 @@
+from abc import ABC, abstractmethod
+
+# Strategy Interface
+class PaymentStrategy(ABC):
+
+    @abstractmethod
+    def pay(self, amount):
+        pass
+
+
+# Concrete Strategy 1
+class CreditCardPayment(PaymentStrategy):
+
+    def pay(self, amount):
+        print(f"Paid ${amount} using Credit Card.")
+
+
+# Concrete Strategy 2
+class PayPalPayment(PaymentStrategy):
+
+    def pay(self, amount):
+        print(f"Paid ${amount} using PayPal.")
+
+
+# Concrete Strategy 3
+class BitcoinPayment(PaymentStrategy):
+
+    def pay(self, amount):
+        print(f"Paid ${amount} using Bitcoin.")
+
+
+# Context Class
+class PaymentProcessor:
+
+    def __init__(self, strategy: PaymentStrategy):
+        self.strategy = strategy
+
+    def set_strategy(self, strategy):
+        self.strategy = strategy
+
+    def process_payment(self, amount):
+        self.strategy.pay(amount)
+
+
+# Client Code
+if __name__ == "__main__":
+
+    processor = PaymentProcessor(CreditCardPayment())
+
+    processor.process_payment(100)
+
+    processor.set_strategy(PayPalPayment())
+    processor.process_payment(250)
+
+    processor.set_strategy(BitcoinPayment())
+    processor.process_payment(500)
