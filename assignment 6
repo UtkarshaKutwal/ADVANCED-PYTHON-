@@ -1,59 +1,62 @@
-# Fractional Knapsack Problem
-# Using Greedy Method
+# 0/1 Knapsack using Top-Down and Bottom-Up approaches
 
-def fractional_knapsack(profits, weights, capacity):
-    n = len(profits)
+# ---------- Top-Down Approach ----------
+def knapsack_top_down(weights, values, capacity):
+    n = len(weights)
+    memo = {}
 
-    # Calculate profit/weight ratio
-    items = []
+    def solve(i, capacity):
+        if i == n or capacity == 0:
+            return 0
 
-    for i in range(n):
-        ratio = profits[i] / weights[i]
-        items.append((profits[i], weights[i], ratio))
+        if (i, capacity) in memo:
+            return memo[(i, capacity)]
 
-    # Sort items by ratio in descending order
-    items.sort(key=lambda x: x[2], reverse=True)
+        # Do not select the item
+        not_take = solve(i + 1, capacity)
 
-    total_profit = 0.0
-    remaining_capacity = capacity
+        # Select the item
+        take = 0
+        if weights[i] <= capacity:
+            take = values[i] + solve(i + 1, capacity - weights[i])
 
-    print("\nItems selected:")
+        memo[(i, capacity)] = max(take, not_take)
+        return memo[(i, capacity)]
 
-    for profit, weight, ratio in items:
-
-        if remaining_capacity <= 0:
-            break
-
-        # Take the complete item if it fits
-        if weight <= remaining_capacity:
-            total_profit += profit
-            remaining_capacity -= weight
-
-            print("Profit =", profit,
-                  "Weight =", weight,
-                  "Fraction Taken = 1.00")
-
-        # Otherwise take the required fraction
-        else:
-            fraction = remaining_capacity / weight
-            total_profit += profit * fraction
-
-            print("Profit =", profit,
-                  "Weight =", weight,
-                  "Fraction Taken =", round(fraction, 2))
-
-            remaining_capacity = 0
-
-    return total_profit
+    return solve(0, capacity)
 
 
-# Input
-profits = [25, 24, 15]
-weights = [18, 15, 10]
-capacity = 20
+# ---------- Bottom-Up Approach ----------
+def knapsack_bottom_up(weights, values, capacity):
+    n = len(weights)
 
-# Calculate maximum profit
-maximum_profit = fractional_knapsack(profits, weights, capacity)
+    dp = [[0] * (capacity + 1) for _ in range(n + 1)]
 
-# Display result
-print("\nMaximum Profit =", maximum_profit)
+    for i in range(1, n + 1):
+        for w in range(capacity + 1):
+
+            if weights[i - 1] <= w:
+                dp[i][w] = max(
+                    values[i - 1] + dp[i - 1][w - weights[i - 1]],
+                    dp[i - 1][w]
+                )
+            else:
+                dp[i][w] = dp[i - 1][w]
+
+    return dp[n][capacity]
+
+
+# ---------- Main Program ----------
+weights = [1, 3, 4, 5]
+values = [1, 4, 5, 7]
+capacity = 7
+
+top_down_result = knapsack_top_down(weights, values, capacity)
+bottom_up_result = knapsack_bottom_up(weights, values, capacity)
+
+print("Weights:", weights)
+print("Values :", values)
+print("Capacity:", capacity)
+
+print("\nMaximum Value using Top-Down:", top_down_result)
+print("Maximum Value using Bottom-Up:", bottom_up_result)
