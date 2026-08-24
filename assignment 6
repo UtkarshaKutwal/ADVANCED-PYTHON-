@@ -1,97 +1,59 @@
-#include <iostream>
-#include <vector>
-using namespace std;
+# Fractional Knapsack Problem
+# Using Greedy Method
 
-int knapsackBottomUp(vector<int> weight, vector<int> value, int capacity)
-{
-    int n = weight.size();
+def fractional_knapsack(profits, weights, capacity):
+    n = len(profits)
 
-    // DP table
-    vector<vector<int>> dp(n + 1, vector<int>(capacity + 1, 0));
+    # Calculate profit/weight ratio
+    items = []
 
-    for (int i = 1; i <= n; i++)
-    {
-        for (int w = 1; w <= capacity; w++)
-        {
-            if (weight[i - 1] <= w)
-            {
-                dp[i][w] = max(
-                    value[i - 1] + dp[i - 1][w - weight[i - 1]],
-                    dp[i - 1][w]
-                );
-            }
-            else
-            {
-                dp[i][w] = dp[i - 1][w];
-            }
-        }
-    }
+    for i in range(n):
+        ratio = profits[i] / weights[i]
+        items.append((profits[i], weights[i], ratio))
 
-    return dp[n][capacity];
-}
+    # Sort items by ratio in descending order
+    items.sort(key=lambda x: x[2], reverse=True)
 
-int main()
-{
-    vector<int> weight = {10, 20, 30};
-    vector<int> value = {60, 100, 120};
+    total_profit = 0.0
+    remaining_capacity = capacity
 
-    int capacity = 50;
+    print("\nItems selected:")
 
-    cout << "Maximum Value = "
-         << knapsackBottomUp(weight, value, capacity);
+    for profit, weight, ratio in items:
 
-    return 0;
-}
+        if remaining_capacity <= 0:
+            break
+
+        # Take the complete item if it fits
+        if weight <= remaining_capacity:
+            total_profit += profit
+            remaining_capacity -= weight
+
+            print("Profit =", profit,
+                  "Weight =", weight,
+                  "Fraction Taken = 1.00")
+
+        # Otherwise take the required fraction
+        else:
+            fraction = remaining_capacity / weight
+            total_profit += profit * fraction
+
+            print("Profit =", profit,
+                  "Weight =", weight,
+                  "Fraction Taken =", round(fraction, 2))
+
+            remaining_capacity = 0
+
+    return total_profit
 
 
-#include <iostream>
-#include <vector>
-using namespace std;
+# Input
+profits = [25, 24, 15]
+weights = [18, 15, 10]
+capacity = 20
 
-int solve(int n, int capacity, vector<int>& weight,
-          vector<int>& value, vector<vector<int>>& dp)
-{
-    // Base condition
-    if (n == 0 || capacity == 0)
-        return 0;
+# Calculate maximum profit
+maximum_profit = fractional_knapsack(profits, weights, capacity)
 
-    // Already calculated
-    if (dp[n][capacity] != -1)
-        return dp[n][capacity];
-
-    // If current item can be included
-    if (weight[n - 1] <= capacity)
-    {
-        dp[n][capacity] = max(
-            value[n - 1] + solve(n - 1,
-                                  capacity - weight[n - 1],
-                                  weight, value, dp),
-            solve(n - 1, capacity, weight, value, dp)
-        );
-    }
-    else
-    {
-        // Cannot include current item
-        dp[n][capacity] =
-            solve(n - 1, capacity, weight, value, dp);
-    }
-
-    return dp[n][capacity];
-}
-
-int main()
-{
-    vector<int> weight = {10, 20, 30};
-    vector<int> value = {60, 100, 120};
-
-    int capacity = 50;
-    int n = weight.size();
-
-    vector<vector<int>> dp(n + 1,
-                           vector<int>(capacity + 1, -1));
-
-    cout << "Maximum Value = "
-         << solve(n, capacity, weight, value, dp);
-
-    return 0;
-}
+# Display result
+print("\nMaximum Profit =", maximum_profit)
