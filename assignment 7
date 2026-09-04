@@ -1,0 +1,116 @@
+import re
+
+# Regular expression pattern for email
+EMAIL_PATTERN = r'[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9.-]+'
+
+# Function to find all email addresses from a given text
+def find_emails(text):
+    emails = re.findall(EMAIL_PATTERN, text)
+    return emails
+
+
+# Function to validate a single email address
+def is_valid_email(email):
+    result = re.fullmatch(EMAIL_PATTERN, email)
+    
+    if result:
+        return True
+    else:
+        return False
+
+
+# Sample text containing different email addresses
+sample_text = """
+Hello Students,
+
+For any queries, contact us using the following email addresses:
+
+support@gmail.com
+student123@yahoo.com
+admin@college.co.in
+rahul_23@gmail.com
+teacher@university.org
+info@company.com
+placement@college.edu
+
+Thank you.
+"""
+
+# Find emails from the sample text
+print("======================================")
+print("       EMAIL PATTERN FINDER")
+print("======================================")
+
+emails = find_emails(sample_text)
+
+print("\nEmail addresses found in the text:")
+print("--------------------------------------")
+
+for i, email in enumerate(emails, start=1):
+    print(i, ".", email)
+
+print("--------------------------------------")
+print("Total number of emails found:", len(emails))
+
+
+# Test individual email addresses
+print("\n======================================")
+print("       EMAIL VALIDATION")
+print("======================================")
+
+test_emails = [
+    "user@gmail.com",
+    "student123@yahoo.com",
+    "admin@college.co.in",
+    "rahul_23@gmail.com",
+    "support@example.org",
+    "@gmail.com",
+    "user@",
+    "user@gmail",
+    "user gmail.com",
+    "user@.com",
+    "hello@",
+    "12345@gmail.com"
+]
+
+print("\nChecking individual email addresses:")
+print("--------------------------------------")
+
+for email in test_emails:
+    if is_valid_email(email):
+        print(email, "-> VALID")
+    else:
+        print(email, "-> INVALID")
+
+
+# Take email input from the user
+print("\n======================================")
+print("       CHECK YOUR EMAIL")
+print("======================================")
+
+user_email = input("Enter an email address: ")
+
+if is_valid_email(user_email):
+    print("Result: VALID EMAIL")
+else:
+    print("Result: INVALID EMAIL")
+
+
+# Display pattern explanation
+print("\n======================================")
+print("       REGEX PATTERN EXPLANATION")
+print("======================================")
+
+print("Pattern:", EMAIL_PATTERN)
+
+print("\nPattern parts:")
+print("[a-zA-Z0-9_.+-]+  -> Local part of email")
+print("@                   -> At symbol")
+print("[a-zA-Z0-9-]+      -> Domain name")
+print("\\.                  -> Literal dot")
+print("[a-zA-Z0-9.-]+     -> Email suffix")
+
+
+print("\n======================================")
+print("             PROGRAM END")
+print("======================================")
