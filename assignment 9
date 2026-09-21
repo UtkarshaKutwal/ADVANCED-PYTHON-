@@ -1,0 +1,22 @@
+
+import csv
+import json
+
+# Step 1: Read data from CSV file
+input_file = "students.csv"
+output_file = "students.json"
+
+students = []
+
+with open(input_file, "r", newline="") as csv_file:
+    csv_reader = csv.DictReader(csv_file)
+
+    for row in csv_reader:
+        students.append(row)
+
+# Step 2: Convert data into JSON format
+with open(output_file, "w") as json_file:
+    json.dump(students, json_file, indent=4)
+
+print("CSV data successfully converted to JSON format.")
+print("JSON data written to", output_file)
