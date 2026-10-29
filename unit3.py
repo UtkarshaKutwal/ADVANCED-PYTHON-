@@ -11,4 +11,3 @@ with open("output.json", "w") as json_file:
     json.dump(data, json_file, indent=4)
 
 print("CSV data converted to JSON successfully!")
-```
