@@ -16,4 +16,3 @@ plt.title("Average Salary by Department")
 plt.xlabel("Department")
 plt.ylabel("Average Salary")
 plt.show()
-```
