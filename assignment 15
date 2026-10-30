@@ -1,0 +1,29 @@
+import gc
+
+class Student:
+    def __init__(self, name):
+        self.name = name
+        self.ref = None
+
+# Create two objects
+s1 = Student("Amit")
+s2 = Student("Rahul")
+
+# Create a reference cycle
+s1.ref = s2
+s2.ref = s1
+
+print("Garbage collection enabled:", gc.isenabled())
+
+# Remove external references
+del s1
+del s2
+
+# Check unreachable objects before collection
+print("Unreachable objects before collection:", gc.collect(0))
+
+# Perform garbage collection manually
+collected = gc.collect()
+
+print("Objects collected:", collected)
+print("Garbage collection counts:", gc.get_count())
